@@ -30,6 +30,8 @@ namespace ApplicationCore
 		public static void AddCustomServices(this IServiceCollection services)
 		{
 			services.AddScoped<ISensorService, SensorService>();
+			services.AddScoped<IAccountsService, AccountsService>();
+			services.AddScoped<IJwtService, JwtService>();
 		}
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ApplicationCore.Interfaces;
 using ApplicationCore.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Controllers
 {
@@ -47,7 +48,7 @@ namespace Web.Controllers
 
 		[HttpGet("GetAllSettings")]
 		public IActionResult GetAllSettings() => Ok(_sensorService.GetAllSettings());
-
+		[Authorize]
 		[HttpGet("GetAllStates")]
 		public IActionResult GetAllStates() => Ok(_sensorService.GetAllStates());
 
