@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 
 namespace ApplicationCore.Services
 {
@@ -36,15 +35,11 @@ namespace ApplicationCore.Services
 		{
 			var jwtOpts = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
 
-			// TODO: make separate method
-			var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOpts.Key));
-			var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
 			var token = new JwtSecurityToken(
-				issuer: jwtOpts.Issuer,
-				claims: claims,
-				expires: DateTime.UtcNow.AddMinutes(jwtOpts.Lifetime),
-				signingCredentials: credentials);
+				issuer:		jwtOpts.Issuer,
+				claims:		claims,
+				expires:	DateTime.UtcNow.AddMinutes(jwtOpts.Lifetime),
+				signingCredentials: new SigningCredentials(jwtOpts.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
 
 			return new JwtSecurityTokenHandler().WriteToken(token);
 		}

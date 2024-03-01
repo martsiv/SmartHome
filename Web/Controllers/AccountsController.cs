@@ -28,11 +28,11 @@ namespace Web.Controllers
 			return Ok(await accountsService.Login(model));
 		}
 
-		[HttpPost("logout")]
-		public async Task<IActionResult> Logout()
-		{
-			await accountsService.Logout();
-			return Ok();
-		}
+		//[HttpPost("logout")]
+		//public async Task<IActionResult> Logout()
+		//{
+		//	await accountsService.Logout();
+		//	return Ok();
+		//}
 	}
 }

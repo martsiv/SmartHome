@@ -6,7 +6,7 @@ namespace ApplicationCore.Interfaces
 	{
 		Task Register(RegisterModel model);
 		Task<LoginResponseModel> Login(LoginModel model);
-		Task Logout();
+		//Task Logout();
 		//Task<ResetPasswordResponse> ResetPasswordRequest(string email);
 		//Task ResetPassword(ResetPasswordModel model);
 	}

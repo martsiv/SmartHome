@@ -2,6 +2,7 @@
 using ApplicationCore.Interfaces;
 using ApplicationCore.DTOs;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Web.Controllers
 {
@@ -48,7 +49,8 @@ namespace Web.Controllers
 
 		[HttpGet("GetAllSettings")]
 		public IActionResult GetAllSettings() => Ok(_sensorService.GetAllSettings());
-		[Authorize]
+		//[Authorize]
+		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 		[HttpGet("GetAllStates")]
 		public IActionResult GetAllStates() => Ok(_sensorService.GetAllStates());
 
