@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.DTOs;
 using ApplicationCore.Entities;
 using ApplicationCore.Interfaces;
+using ApplicationCore.Specifications;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -97,37 +98,37 @@ namespace ApplicationCore.Services
 
 		public IEnumerable<RoomDto> GetAllRooms()
 		{
-			var rooms = roomsRepo.Get();
+			var rooms = roomsRepo.GetAll();
 			return mapper.Map<IEnumerable<RoomDto>>(rooms);
 		}
 
 		public IEnumerable<SensorDto> GetAllSensors()
 		{
-			var sensors = sensorsRepo.Get();
+			var sensors = sensorsRepo.GetAll();
 			return mapper.Map<IEnumerable<SensorDto>>(sensors);
 		}
 
 		public IEnumerable<SensorSettingDto> GetAllSensorSettings()
 		{
-			var sensorSettings = sensorSettingsRepo.Get();
+			var sensorSettings = sensorSettingsRepo.GetAll();
 			return mapper.Map<IEnumerable<SensorSettingDto>>(sensorSettings);
 		}
 
 		public IEnumerable<SensorTypeDto> GetAllSensorTypes()
 		{
-			var sensorTypes = sensorTypesRepo.Get();
+			var sensorTypes = sensorTypesRepo.GetAll();
 			return mapper.Map<IEnumerable<SensorTypeDto>>(sensorTypes);
 		}
 
 		public IEnumerable<SettingDto> GetAllSettings()
 		{
-			var settings = settingsRepo.Get();
+			var settings = settingsRepo.GetAll();
 			return mapper.Map<IEnumerable<SettingDto>>(settings);
 		}
 
 		public IEnumerable<StateDto> GetAllStates()
 		{
-			var states = statesRepo.Get();
+			var states = statesRepo.GetAll();
 			return mapper.Map<IEnumerable<StateDto>>(states);
 		}
 
@@ -142,13 +143,11 @@ namespace ApplicationCore.Services
 			var sensor = sensorsRepo.GetByID(sensorId);
 			return mapper.Map<SensorDto>(sensor);
 		}
-		public SensorDto GetSensorByIP(string ipAddress)
+		public async Task<SensorDto> GetSensorByIPAsync(string ipAddress)
 		{
-			// Filter for getting sensor by IP
-			Expression<Func<Sensor, bool>> filter = sensor => sensor.SensorIP == ipAddress;
-			// Invoke method with filter
-			IEnumerable<Sensor> sensors = sensorsRepo.Get(filter);
-			Sensor sensorWithIP = sensors.FirstOrDefault();
+			Sensor? sensorWithIP = await sensorsRepo.GetItemBySpecAsync(new SensorSpecs.ByIp(ipAddress));
+			if (sensorWithIP == null)
+				throw new Exception("Not found sensor by IP");
 			return mapper.Map<SensorDto>(sensorWithIP);
 		}
 
@@ -158,9 +157,9 @@ namespace ApplicationCore.Services
 			return mapper.Map<SensorSettingDto>(sensorSetting);
 		}
 
-		public IEnumerable<SensorSettingDto> GetSensorSettingsBySensorId(int sensorId)
+		public async Task<IEnumerable<SensorSettingDto>> GetSensorSettingsBySensorIdAsync(int sensorId)
 		{
-			var sensorSettings = sensorSettingsRepo.Get(s => s.SensorId == sensorId);
+			var sensorSettings = await sensorSettingsRepo.GetListBySpecAsync(new SensorSettingsSpecs.BySensorId(sensorId));
 			return mapper.Map<IEnumerable<SensorSettingDto>>(sensorSettings);
 		}
 
@@ -219,9 +218,9 @@ namespace ApplicationCore.Services
 			}
 		}
 
-		public void RemoveSensorSettingsBySensor(int sensorId)
+		public async Task RemoveSensorSettingsBySensorAsync(int sensorId)
 		{
-			var sensorSettings = sensorSettingsRepo.Get(s => s.SensorId == sensorId);
+			var sensorSettings = await sensorSettingsRepo.GetListBySpecAsync(new SensorSettingsSpecs.BySensorId(sensorId));
 			foreach (var setting in sensorSettings)
 			{
 				sensorSettingsRepo.Delete(setting);
@@ -339,13 +338,11 @@ namespace ApplicationCore.Services
 			throw new NotImplementedException();
 		}
 
-		public SensorDto GetSensorByMac(string macAddress)
+		public async Task<SensorDto> GetSensorByMacAsync(string macAddress)
 		{
-			// Filter for getting sensor by IP
-			Expression<Func<Sensor, bool>> filter = sensor => sensor.MacAddress == macAddress;
-			// Invoke method with filter
-			IEnumerable<Sensor> sensors = sensorsRepo.Get(filter);
-			Sensor sensorWithMac = sensors.FirstOrDefault();
+			Sensor? sensorWithMac = await sensorsRepo.GetItemBySpecAsync(new SensorSpecs.ByMac(macAddress));
+			if (sensorWithMac == null)
+				throw new Exception("Not found sensor by MAC-Address");
 			return mapper.Map<SensorDto>(sensorWithMac);
 		}
 	}

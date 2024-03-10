@@ -19,8 +19,8 @@ namespace ApplicationCore.Interfaces
 		void UpdateSensor(int sensorId, SensorDto sensor);
 		IEnumerable<SensorDto> GetAllSensors();
 		SensorDto GetSensorById(int sensorId);
-		SensorDto GetSensorByIP(string ipAddress);
-		SensorDto GetSensorByMac(string macAddress);
+		Task<SensorDto> GetSensorByIPAsync(string ipAddress);
+		Task<SensorDto> GetSensorByMacAsync(string macAddress);
 
 		void AddRoom(RoomDto room);
 		void RemoveRoom(int roomId);
@@ -48,10 +48,10 @@ namespace ApplicationCore.Interfaces
 
 		void AddSensorSetting(SensorSettingDto sensorSetting);
 		void RemoveSensorSetting(int sensorSettingId);
-		void RemoveSensorSettingsBySensor(int sensorId);
+		Task RemoveSensorSettingsBySensorAsync(int sensorId);
 		void UpdateSensorSetting(int sensorSettingId, SensorSettingDto sensorSetting);
 		IEnumerable<SensorSettingDto> GetAllSensorSettings();
 		SensorSettingDto GetSensorSettingById(int sensorSettingId);
-		IEnumerable<SensorSettingDto> GetSensorSettingsBySensorId(int sensorId);
+		Task<IEnumerable<SensorSettingDto>> GetSensorSettingsBySensorIdAsync(int sensorId);
 	}
 }

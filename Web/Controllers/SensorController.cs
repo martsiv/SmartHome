@@ -33,7 +33,7 @@ namespace Web.Controllers
 			if (registerKey != sensor.RegisterKey)
 				return Unauthorized();
 			// Розбити логіку на виявлення сенсора, якщо немає то сервіс - регістер, а далі просто сервіс - логін
-			if (_sensorService?.GetSensorByMac(sensor.MacAddress) == null)
+			if (_sensorService?.GetSensorByMacAsync(sensor.MacAddress) == null)
 			{
 				SensorDto sensorDto = _sensorService.RegisterSensor(sensor);
 				return Ok(_sensorService.LoginSensor(sensorDto));
@@ -82,8 +82,8 @@ namespace Web.Controllers
 		[HttpGet("GetSensorSettingById/{sensorSettingId}")]
 		public IActionResult GetSensorSettingById(int sensorSettingId) => Ok(_sensorService.GetSensorSettingById(sensorSettingId));
 
-		[HttpGet("GetSensorSettingsBySensorId/{sensorId}")]
-		public IActionResult GetSensorSettingsBySensorId(int sensorId) => Ok(_sensorService.GetSensorSettingsBySensorId(sensorId));
+		[HttpGet("GetSensorSettingsBySensorIdAsync/{sensorId}")]
+		public async Task<IActionResult> GetSensorSettingsBySensorId(int sensorId) => Ok(await _sensorService.GetSensorSettingsBySensorIdAsync(sensorId));
 
 		[HttpGet("GetSensorTypeById/{sensorTypeId}")]
 		public IActionResult GetSensorTypeById(int sensorTypeId) => Ok(_sensorService.GetSensorTypeById(sensorTypeId));
@@ -96,14 +96,9 @@ namespace Web.Controllers
 
 		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 		[HttpPost("InsertNotification")]
-		public IActionResult InsertNotification([FromBody]NewNotificationModel newNotificationModel)
+		public async Task<IActionResult> InsertNotification([FromBody]NewNotificationModel newNotificationModel)
 		{
-			//string sensorToken = _configuration["SensorToken"];
-			//string authorizationHeader = HttpContext.Request.Headers["Authorization"];
-			//if (authorizationHeader != sensorToken)
-			//	return BadRequest();
-
-			var sensorId = _sensorService.GetSensorByMac(newNotificationModel.SensorMacAddress)?.Id;
+			var sensorId = (await _sensorService.GetSensorByMacAsync(newNotificationModel.SensorMacAddress))?.Id;
 
 			if (sensorId != null)
 			{
@@ -129,8 +124,10 @@ namespace Web.Controllers
 		[HttpDelete("RemoveSensorSetting/{sensorSettingId}")]
 		public IActionResult RemoveSensorSetting(int sensorSettingId) => ExecuteServiceAction(() => _sensorService.RemoveSensorSetting(sensorSettingId));
 
-		[HttpDelete("RemoveSensorSettingsBySensor/{sensorId}")]
-		public IActionResult RemoveSensorSettingsBySensor(int sensorId) => ExecuteServiceAction(() => _sensorService.RemoveSensorSettingsBySensor(sensorId));
+		[HttpDelete("RemoveSensorSettingsBySensorAsync/{sensorId}")]
+		public async Task<IActionResult> RemoveSensorSettingsBySensor(int sensorId) {
+			return ExecuteServiceAction(async () => await _sensorService.RemoveSensorSettingsBySensorAsync(sensorId));
+		}
 
 		[HttpDelete("RemoveSensorType/{sensorTypeId}")]
 		public IActionResult RemoveSensorType(int sensorTypeId) => ExecuteServiceAction(() => _sensorService.RemoveSensorType(sensorTypeId));
