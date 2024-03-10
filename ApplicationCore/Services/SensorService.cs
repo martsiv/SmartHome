@@ -2,9 +2,12 @@
 using ApplicationCore.Entities;
 using ApplicationCore.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Net.Mail;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +16,7 @@ namespace ApplicationCore.Services
 {
 	public class SensorService : ISensorService
 	{
+		private readonly IJwtService jwtService;
 		private readonly IMapper mapper;
 		private readonly IRepository<Notification> notificationsRepo;
 		private readonly IRepository<Room> roomsRepo;
@@ -22,7 +26,8 @@ namespace ApplicationCore.Services
 		private readonly IRepository<Setting> settingsRepo;
 		private readonly IRepository<State> statesRepo;
 
-        public SensorService(IMapper mapper,
+        public SensorService(IJwtService jwtService,
+							IMapper mapper,
 							IRepository<Notification> notificationsRepo,
 							IRepository<Room> roomsRepo,
 							IRepository<Sensor> sensorsRepo,
@@ -31,6 +36,7 @@ namespace ApplicationCore.Services
 							IRepository<Setting> settingsRepo,
 							IRepository<State> statesRepo)
         {
+			this.jwtService = jwtService;
 			this.mapper = mapper;
             this.notificationsRepo = notificationsRepo;
 			this.roomsRepo = roomsRepo;
@@ -48,11 +54,17 @@ namespace ApplicationCore.Services
 			roomsRepo.Save();
 		}
 
-		public void AddSensor(SensorDto sensor)
+		public SensorDto RegisterSensor(RegisterSensorModel registerSensorModel)
 		{
-			var entity = mapper.Map<Sensor>(sensor);
+			var entity = mapper.Map<Sensor>(registerSensorModel);
 			sensorsRepo.Insert(entity);
 			sensorsRepo.Save();
+
+			return mapper.Map<SensorDto>(entity);
+		}
+		public LoginSensorResponseModel LoginSensor(SensorDto sensor)
+		{
+			return new LoginSensorResponseModel() { Token = jwtService.CreateToken(jwtService.GetClaims(sensor)) };
 		}
 
 		public void AddSensorSetting(SensorSettingDto sensorSetting)
@@ -129,6 +141,15 @@ namespace ApplicationCore.Services
 		{
 			var sensor = sensorsRepo.GetByID(sensorId);
 			return mapper.Map<SensorDto>(sensor);
+		}
+		public SensorDto GetSensorByIP(string ipAddress)
+		{
+			// Filter for getting sensor by IP
+			Expression<Func<Sensor, bool>> filter = sensor => sensor.SensorIP == ipAddress;
+			// Invoke method with filter
+			IEnumerable<Sensor> sensors = sensorsRepo.Get(filter);
+			Sensor sensorWithIP = sensors.FirstOrDefault();
+			return mapper.Map<SensorDto>(sensorWithIP);
 		}
 
 		public SensorSettingDto GetSensorSettingById(int sensorSettingId)
@@ -316,6 +337,16 @@ namespace ApplicationCore.Services
 		{
 			// Implement logic to retrieve last notifications for a given sensor ID
 			throw new NotImplementedException();
+		}
+
+		public SensorDto GetSensorByMac(string macAddress)
+		{
+			// Filter for getting sensor by IP
+			Expression<Func<Sensor, bool>> filter = sensor => sensor.MacAddress == macAddress;
+			// Invoke method with filter
+			IEnumerable<Sensor> sensors = sensorsRepo.Get(filter);
+			Sensor sensorWithMac = sensors.FirstOrDefault();
+			return mapper.Map<SensorDto>(sensorWithMac);
 		}
 	}
 }

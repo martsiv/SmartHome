@@ -1,6 +1,7 @@
 ﻿using ApplicationCore;
 using Infrastructure;
 using Web;
+using Web.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,15 @@ builder.Services.AddAutoMapper();
 builder.Services.AddCustomServices();
 
 var app = builder.Build();
+
+// Use CORS
+app.UseCors(builder => builder.AllowAnyOrigin());
+
+using (var scope = app.Services.CreateScope())
+{
+	scope.ServiceProvider.SeedRoles().Wait();
+	//scope.ServiceProvider.SeedAdmin().Wait();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -3,6 +3,8 @@ using ApplicationCore.Interfaces;
 using ApplicationCore.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using AutoMapper;
+using Web.Helpers;
 
 namespace Web.Controllers
 {
@@ -10,18 +12,35 @@ namespace Web.Controllers
 	[ApiController]
 	public class SensorController : ControllerBase
 	{
+		private readonly IConfiguration _configuration;
 		private readonly ISensorService _sensorService;
+		private readonly IMapper _mapper;
 
-		public SensorController(ISensorService sensorService)
+		public SensorController(IConfiguration configuration, ISensorService sensorService, IMapper mapper)
 		{
-			_sensorService = sensorService;
+			this._configuration = configuration;
+			this._sensorService = sensorService;
+			this._mapper = mapper;
 		}
 
 		[HttpPost("AddRoom")]
 		public IActionResult AddRoom(RoomDto room) => ExecuteServiceAction(() => _sensorService.AddRoom(room));
 
-		[HttpPost("AddSensor")]
-		public IActionResult AddSensor(SensorDto sensor) => ExecuteServiceAction(() => _sensorService.AddSensor(sensor));
+		[HttpPost("RegisterSensor")]
+		public IActionResult ConnectSensor([FromBody]RegisterSensorModel sensor)
+		{
+			string registerKey = _configuration["RegisterKey"];
+			if (registerKey != sensor.RegisterKey)
+				return Unauthorized();
+			// Розбити логіку на виявлення сенсора, якщо немає то сервіс - регістер, а далі просто сервіс - логін
+			if (_sensorService?.GetSensorByMac(sensor.MacAddress) == null)
+			{
+				SensorDto sensorDto = _sensorService.RegisterSensor(sensor);
+				return Ok(_sensorService.LoginSensor(sensorDto));
+			}
+			else
+				return Ok(_sensorService.LoginSensor(_mapper.Map<SensorDto>(sensor)));
+		}
 
 		[HttpPost("AddSensorSetting")]
 		public IActionResult AddSensorSetting(SensorSettingDto sensorSetting) => ExecuteServiceAction(() => _sensorService.AddSensorSetting(sensorSetting));
@@ -50,7 +69,7 @@ namespace Web.Controllers
 		[HttpGet("GetAllSettings")]
 		public IActionResult GetAllSettings() => Ok(_sensorService.GetAllSettings());
 		//[Authorize]
-		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = Roles.Microcontroller)]
 		[HttpGet("GetAllStates")]
 		public IActionResult GetAllStates() => Ok(_sensorService.GetAllStates());
 
@@ -75,8 +94,31 @@ namespace Web.Controllers
 		[HttpGet("GetStateById/{stateId}")]
 		public IActionResult GetStateById(int stateId) => Ok(_sensorService.GetStateById(stateId));
 
+		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 		[HttpPost("InsertNotification")]
-		public IActionResult InsertNotification(NotificationDto notificationDto) => ExecuteServiceAction(() => _sensorService.InsertNotification(notificationDto));
+		public IActionResult InsertNotification([FromBody]NewNotificationModel newNotificationModel)
+		{
+			//string sensorToken = _configuration["SensorToken"];
+			//string authorizationHeader = HttpContext.Request.Headers["Authorization"];
+			//if (authorizationHeader != sensorToken)
+			//	return BadRequest();
+
+			var sensorId = _sensorService.GetSensorByMac(newNotificationModel.SensorMacAddress)?.Id;
+
+			if (sensorId != null)
+			{
+				NotificationDto notificationDto = new NotificationDto()
+				{
+					Name = newNotificationModel.Name,
+					SensorId = (int)sensorId,
+					Data = newNotificationModel.Data,
+					Date = DateTime.UtcNow
+				};
+				return ExecuteServiceAction(() => _sensorService.InsertNotification(notificationDto));
+			}
+
+			return BadRequest();
+		}
 
 		[HttpDelete("RemoveRoom/{roomId}")]
 		public IActionResult RemoveRoom(int roomId) => ExecuteServiceAction(() => _sensorService.RemoveRoom(roomId));

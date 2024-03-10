@@ -13,11 +13,14 @@ namespace ApplicationCore.Interfaces
 		IEnumerable<NotificationDto> GetLastNotifications(int sensorId);
 		void InsertNotification(NotificationDto notificationDto);
 
-		void AddSensor(SensorDto sensor);
+		SensorDto RegisterSensor(RegisterSensorModel registerSensorModel);
+		LoginSensorResponseModel LoginSensor(SensorDto sensor);
 		void RemoveSensor(int sensorId);
 		void UpdateSensor(int sensorId, SensorDto sensor);
 		IEnumerable<SensorDto> GetAllSensors();
 		SensorDto GetSensorById(int sensorId);
+		SensorDto GetSensorByIP(string ipAddress);
+		SensorDto GetSensorByMac(string macAddress);
 
 		void AddRoom(RoomDto room);
 		void RemoveRoom(int roomId);

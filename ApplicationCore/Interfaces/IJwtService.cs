@@ -1,4 +1,5 @@
-﻿using ApplicationCore.Entities;
+﻿using ApplicationCore.DTOs;
+using ApplicationCore.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace ApplicationCore.Interfaces
 	{
 		// ------- Access Token
 		IEnumerable<Claim> GetClaims(User user);
+		IEnumerable<Claim> GetClaims(SensorDto sensorDto);
 		string CreateToken(IEnumerable<Claim> claims);
 
 		// ------- Refresh Token

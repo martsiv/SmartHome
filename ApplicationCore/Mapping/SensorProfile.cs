@@ -8,8 +8,11 @@ namespace ApplicationCore.Mapping
 	{
         public SensorProfile()
         {
+			CreateMap<RegisterSensorModel, Sensor>();
+			CreateMap<RegisterSensorModel, SensorDto>();
 			CreateMap<Sensor, SensorDto>().ReverseMap();
 			CreateMap<Notification, NotificationDto>().ReverseMap();
+			CreateMap<NewNotificationModel, Notification>();
 			CreateMap<Room, RoomDto>().ReverseMap();
 			CreateMap<SensorSetting, SensorSettingDto>().ReverseMap();
 			CreateMap<SensorType, SensorTypeDto>().ReverseMap();
