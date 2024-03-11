@@ -3,6 +3,8 @@ using ApplicationCore.Entities;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Specifications;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -344,6 +346,18 @@ namespace ApplicationCore.Services
 			if (sensorWithMac == null)
 				throw new Exception("Not found sensor by MAC-Address");
 			return mapper.Map<SensorDto>(sensorWithMac);
+		}
+
+		public async Task<HttpResponseMessage> GetNewNotifications(SensorDto sensor)
+		{
+			using (var client = new HttpClient())
+			{
+				string url = $"http://{sensor.SensorIP}/getNewValues";
+
+				HttpResponseMessage response = await client.GetAsync(url);
+
+				return response;
+			}
 		}
 	}
 }

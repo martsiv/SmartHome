@@ -1,11 +1,12 @@
 ﻿using ApplicationCore.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace Infrastructure.Data
 {
-	internal class ApplicationContext : IdentityDbContext<User>
+	internal class ApplicationContext : IdentityDbContext<IdentityUser>
 	{
 		public ApplicationContext(DbContextOptions<ApplicationContext> options)
 			: base(options) { }

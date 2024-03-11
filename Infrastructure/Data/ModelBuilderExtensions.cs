@@ -1,5 +1,6 @@
 ﻿using ApplicationCore.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 
 namespace Infrastructure.Data
 {
@@ -34,6 +35,19 @@ namespace Infrastructure.Data
 				new SensorType() { Id = 6, Name = "RFID sensor" },
 				new SensorType() { Id = 7, Name = "Lightning controller" },
 				new SensorType() { Id = 8, Name = "Fan controller" },				
+			});
+
+			builder.Entity<Indicator>().HasData(new[]
+			{
+				new Indicator() { Id = 1, Name = "Temperature" },
+				new Indicator() { Id = 2, Name = "Humidity" },
+			});
+
+			builder.Entity<NotificationType>().HasData(new[]
+			{
+				new NotificationType() { Id = 1, Name = "Informational", PriorityLevel = 1 },
+				new NotificationType() { Id = 2, Name = "Important", PriorityLevel = 10 },
+				new NotificationType() { Id = 3, Name = "Critical", PriorityLevel = 100 },
 			});
 		}
 	}

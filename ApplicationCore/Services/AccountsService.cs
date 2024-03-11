@@ -14,13 +14,13 @@ namespace ApplicationCore.Services
 {
 	internal class AccountsService : IAccountsService
 	{
-		private readonly UserManager<User> userManager;
+		private readonly UserManager<IdentityUser> userManager;
 		//private readonly SignInManager<User> signInManager;
 		private readonly IMapper mapper;
 		//private readonly IValidator<RegisterModel> registerValidator;
 		private readonly IJwtService jwtService;
 
-		public AccountsService(UserManager<User> userManager,
+		public AccountsService(UserManager<IdentityUser> userManager,
 								//SignInManager<User> signInManager,
 								IMapper mapper,
 								//IValidator<RegisterModel> registerValidator,
@@ -40,7 +40,7 @@ namespace ApplicationCore.Services
 			//if (await userManager.FindByEmailAsync(model.Email) != null)
 			//	throw new HttpException("Email is already exists.", HttpStatusCode.BadRequest);
 
-			var user = mapper.Map<User>(model);
+			var user = mapper.Map<IdentityUser>(model);
 
 			var result = await userManager.CreateAsync(user, model.Password);
 

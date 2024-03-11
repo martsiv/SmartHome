@@ -23,7 +23,7 @@ namespace Infrastructure
 
 		public static void AddIdentity(this IServiceCollection services)
 		{
-			services.AddIdentity<User, IdentityRole>(options =>
+			services.AddIdentity<IdentityUser, IdentityRole>(options =>
 			{
 				options.SignIn.RequireConfirmedAccount = false;
 			})

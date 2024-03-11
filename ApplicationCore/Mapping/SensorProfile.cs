@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.DTOs;
 using ApplicationCore.Entities;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 
 namespace ApplicationCore.Mapping
 {
@@ -18,7 +19,7 @@ namespace ApplicationCore.Mapping
 			CreateMap<SensorType, SensorTypeDto>().ReverseMap();
 			CreateMap<Setting, SettingDto>().ReverseMap();
 			CreateMap<State, StateDto>().ReverseMap();
-			CreateMap<User, UserDto>().ReverseMap();
+			CreateMap<IdentityUser, UserDto>().ReverseMap();
 		}
     }
 }

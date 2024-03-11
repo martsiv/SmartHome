@@ -29,29 +29,29 @@ namespace Web.Helpers
 			}
 		}
 
-		//public static async Task SeedAdmin(this IServiceProvider app)
-		//{
-		//	var userManager = app.GetRequiredService<UserManager<User>>();
+		public static async Task SeedAdmin(this IServiceProvider app)
+		{
+			var userManager = app.GetRequiredService<UserManager<IdentityUser>>();
 
-		//	const string USERNAME = "myadmin@myadmin.com";
-		//	const string PASSWORD = "Admin1@";
+			const string USERNAME = "myadmin@myadmin.com";
+			const string PASSWORD = "Admin1@";
 
-		//	var existingUser = await userManager.FindByNameAsync(USERNAME);
+			var existingUser = await userManager.FindByNameAsync(USERNAME);
 
-		//	if (existingUser == null)
-		//	{
-		//		var user = new User
-		//		{
-		//			UserName = USERNAME,
-		//			Email = USERNAME
-		//		};
+			if (existingUser == null)
+			{
+				var user = new IdentityUser
+				{
+					UserName = USERNAME,
+					Email = USERNAME
+				};
 
-		//		var result = await userManager.CreateAsync(user, PASSWORD);
-		//		if (result.Succeeded)
-		//		{
-		//			await userManager.AddToRoleAsync(user, Roles.Admin.ToString());
-		//		}
-		//	}
-		//}
+				var result = await userManager.CreateAsync(user, PASSWORD);
+				if (result.Succeeded)
+				{
+					await userManager.AddToRoleAsync(user, Roles.Admin.ToString());
+				}
+			}
+		}
 	}
 }

@@ -14,5 +14,6 @@
         public string MacAddress { get; set; }
         public ICollection<Notification> Notifications { get; set; } = new HashSet<Notification>();
         public ICollection<SensorSetting> SensorSettings { get; set; } = new HashSet<SensorSetting>();
+        public ICollection<SensorDataStamp> SensorDataStamps { get; set; } = new HashSet<SensorDataStamp>();
     }
 }

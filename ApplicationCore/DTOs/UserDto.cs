@@ -10,7 +10,5 @@ namespace ApplicationCore.DTOs
 	{
         public string Id { get; set; }
 		public string Name { get; set; }
-        public int TelegramId { get; set; }
-		public string TelegramName { get; set;}
     }
 }

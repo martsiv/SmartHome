@@ -2,6 +2,7 @@
 using ApplicationCore.Entities;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Utilities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -18,7 +19,7 @@ namespace ApplicationCore.Services
 			this.configuration = configuration;
 		}
 
-		public IEnumerable<Claim> GetClaims(User user)
+		public IEnumerable<Claim> GetClaims(IdentityUser user)
 		{
 			var claims = new List<Claim>
 			{

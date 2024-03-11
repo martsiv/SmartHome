@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.DTOs;
 using ApplicationCore.Entities;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace ApplicationCore.Mapping
 	{
 		public AccountProfile()
 		{
-			CreateMap<RegisterModel, User>()
+			CreateMap<RegisterModel, IdentityUser>()
 				.ForMember(x => x.UserName, opts => opts.MapFrom(s => s.Email));
 		}
 	}

@@ -11,6 +11,8 @@ namespace ApplicationCore.Interfaces
 	{
 		IEnumerable<NotificationDto> UpdateNotifications(int sensorId);
 		IEnumerable<NotificationDto> GetLastNotifications(int sensorId);
+		Task<HttpResponseMessage> GetNewNotifications(SensorDto sensor);
+
 		void InsertNotification(NotificationDto notificationDto);
 
 		SensorDto RegisterSensor(RegisterSensorModel registerSensorModel);

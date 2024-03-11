@@ -1,5 +1,6 @@
 ﻿using ApplicationCore.DTOs;
 using ApplicationCore.Entities;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace ApplicationCore.Interfaces
 	public interface IJwtService
 	{
 		// ------- Access Token
-		IEnumerable<Claim> GetClaims(User user);
+		IEnumerable<Claim> GetClaims(IdentityUser user);
 		IEnumerable<Claim> GetClaims(SensorDto sensorDto);
 		string CreateToken(IEnumerable<Claim> claims);
 

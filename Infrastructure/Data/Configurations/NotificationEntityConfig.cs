@@ -11,7 +11,7 @@ namespace Infrastructure.Data.Configurations
             builder.HasKey(x => x.Id);
             builder.ToTable("Notifications");
             builder.HasOne(x => x.Sensor).WithMany(x => x.Notifications).HasForeignKey(x => x.SensorId).IsRequired(true);
-			builder.Property(x => x.Data).HasColumnType("decimal(18,4)");
+            builder.HasOne(x => x.NotificationType).WithMany(x => x.Notifications).HasForeignKey(x => x.NotificationTypeId).IsRequired(true);
 		}
 	}
 }
