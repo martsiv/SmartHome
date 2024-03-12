@@ -7,11 +7,9 @@ namespace ApplicationCore.Interfaces
 		Task Register(RegisterModel model);
 		Task<LoginResponseModel> Login(LoginModel model);
 		//Task Logout();
-		//Task<ResetPasswordResponse> ResetPasswordRequest(string email);
-		//Task ResetPassword(ResetPasswordModel model);
+		Task<ResetPasswordResponse> ResetPasswordRequest(string email);
+		Task ResetPassword(ResetPasswordModel model);
 	}
-
-	// TODO: implement reset user password endpoints
 	public class ResetPasswordResponse
 	{
 		public string Token { get; set; }

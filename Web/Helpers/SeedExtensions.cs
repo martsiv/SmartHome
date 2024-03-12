@@ -1,5 +1,4 @@
-﻿using ApplicationCore.Entities;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using System.Reflection;
 
 namespace Web.Helpers

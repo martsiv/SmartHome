@@ -1,9 +1,4 @@
 ﻿using ApplicationCore.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ApplicationCore.Interfaces
 {
@@ -11,7 +6,7 @@ namespace ApplicationCore.Interfaces
 	{
 		IEnumerable<NotificationDto> UpdateNotifications(int sensorId);
 		IEnumerable<NotificationDto> GetLastNotifications(int sensorId);
-		Task<HttpResponseMessage> GetNewNotifications(SensorDto sensor);
+		Task<HttpResponseMessage> GetNewDataStams(SensorDto sensor);
 
 		void InsertNotification(NotificationDto notificationDto);
 

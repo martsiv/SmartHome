@@ -20,6 +20,12 @@ namespace ApplicationCore.Mapping
 			CreateMap<Setting, SettingDto>().ReverseMap();
 			CreateMap<State, StateDto>().ReverseMap();
 			CreateMap<IdentityUser, UserDto>().ReverseMap();
+			CreateMap<EditSensorDto, Sensor>().ReverseMap();
+			CreateMap<Indicator, IndicatorDto>().ReverseMap();
+			CreateMap<NotificationType, NotificationTypeDto>().ReverseMap();
+			CreateMap<SensorDataIndicator, SensorDataIndicatorDto>().ReverseMap();
+			CreateMap<SensorDataStamp, SensorDataStampDto>().ReverseMap();
+			CreateMap<Subscription, SubscriptionDto>().ReverseMap();
 		}
     }
 }

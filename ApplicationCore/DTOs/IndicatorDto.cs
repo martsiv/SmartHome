@@ -1,6 +1,6 @@
 ﻿namespace ApplicationCore.DTOs
 {
-	public class RoomDto
+	public class IndicatorDto
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }

@@ -1,6 +1,5 @@
 ﻿using ApplicationCore.Entities;
 using Ardalis.Specification;
-using System.Security.Cryptography;
 
 namespace ApplicationCore.Specifications
 {

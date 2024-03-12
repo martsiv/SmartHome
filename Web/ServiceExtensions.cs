@@ -1,8 +1,6 @@
 ﻿using ApplicationCore.Utilities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 namespace Web
 {

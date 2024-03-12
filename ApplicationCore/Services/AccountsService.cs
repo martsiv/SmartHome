@@ -1,14 +1,7 @@
 ﻿using ApplicationCore.DTOs;
-using ApplicationCore.Entities;
 using ApplicationCore.Interfaces;
 using AutoMapper;
-using FluentValidation;
-using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System;
 
 namespace ApplicationCore.Services
 {
@@ -65,6 +58,16 @@ namespace ApplicationCore.Services
 				Username = user.Email,
 				Token = jwtService.CreateToken(jwtService.GetClaims(user))
 			};
+		}
+		// TODO Implement reset password
+		public Task<ResetPasswordResponse> ResetPasswordRequest(string email)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task ResetPassword(ResetPasswordModel model)
+		{
+			throw new NotImplementedException();
 		}
 
 		//public async Task Logout()

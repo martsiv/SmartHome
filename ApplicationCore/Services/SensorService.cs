@@ -3,17 +3,6 @@ using ApplicationCore.Entities;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Specifications;
 using AutoMapper;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Net.Mail;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ApplicationCore.Services
 {
@@ -21,34 +10,55 @@ namespace ApplicationCore.Services
 	{
 		private readonly IJwtService jwtService;
 		private readonly IMapper mapper;
+		private readonly IRepository<Indicator> indicatorsRepo;
 		private readonly IRepository<Notification> notificationsRepo;
+		private readonly IRepository<NotificationType> notificationTypesRepo;
 		private readonly IRepository<Room> roomsRepo;
 		private readonly IRepository<Sensor> sensorsRepo;
+		private readonly IRepository<SensorDataIndicator> sensorDataIndicatorsRepo;
+		private readonly IRepository<SensorDataStamp> sensorDataStampsRepo;
 		private readonly IRepository<SensorSetting> sensorSettingsRepo;
 		private readonly IRepository<SensorType> sensorTypesRepo;
 		private readonly IRepository<Setting> settingsRepo;
 		private readonly IRepository<State> statesRepo;
+		private readonly IRepository<Subscription> subscriptionsRepo;
+		private readonly IRepository<TelegramChatEntity> telegramChatEntitiesRepo;
 
         public SensorService(IJwtService jwtService,
 							IMapper mapper,
+							IRepository<Indicator> indicatorsRepo,
 							IRepository<Notification> notificationsRepo,
+							IRepository<NotificationType> notificationTypesRepo,
 							IRepository<Room> roomsRepo,
 							IRepository<Sensor> sensorsRepo,
+							IRepository<SensorDataIndicator> sensorDataIndicatorsRepo,
+							IRepository<SensorDataStamp> sensorDataStampsRepo,
 							IRepository<SensorSetting> sensorSettingsRepo,
 							IRepository<SensorType> sensorTypesRepo,
 							IRepository<Setting> settingsRepo,
-							IRepository<State> statesRepo)
+							IRepository<State> statesRepo,
+							IRepository<Subscription> subscriptionsRepo,
+							IRepository<TelegramChatEntity> telegramChatEntitiesRepo)
         {
 			this.jwtService = jwtService;
 			this.mapper = mapper;
+			this.indicatorsRepo = indicatorsRepo;
             this.notificationsRepo = notificationsRepo;
+			this.notificationTypesRepo = notificationTypesRepo;
 			this.roomsRepo = roomsRepo;
 			this.sensorsRepo = sensorsRepo;
+			this.sensorDataIndicatorsRepo = sensorDataIndicatorsRepo;
+			this.sensorDataStampsRepo = sensorDataStampsRepo;
 			this.sensorSettingsRepo = sensorSettingsRepo;
 			this.sensorTypesRepo = sensorTypesRepo;
 			this.settingsRepo = settingsRepo;
 			this.statesRepo = statesRepo;
+			this.subscriptionsRepo = subscriptionsRepo;
+			this.telegramChatEntitiesRepo = telegramChatEntitiesRepo;
         }
+
+		// Indicators
+
 
 		public void AddRoom(RoomDto room)
 		{
@@ -348,7 +358,7 @@ namespace ApplicationCore.Services
 			return mapper.Map<SensorDto>(sensorWithMac);
 		}
 
-		public async Task<HttpResponseMessage> GetNewNotifications(SensorDto sensor)
+		public async Task<HttpResponseMessage> GetNewDataStams(SensorDto sensor)
 		{
 			using (var client = new HttpClient())
 			{

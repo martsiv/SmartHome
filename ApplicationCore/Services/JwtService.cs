@@ -1,5 +1,4 @@
 ﻿using ApplicationCore.DTOs;
-using ApplicationCore.Entities;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Utilities;
 using Microsoft.AspNetCore.Identity;
