@@ -17,23 +17,23 @@ namespace Infrastructure.Repositories
 			this.dbSet = context.Set<TEntity>();
 		}
 
-		public virtual IEnumerable<TEntity> GetAll()
+		public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
 		{
-			return dbSet.ToList();
+			return await dbSet.ToListAsync();
 		}
-		public virtual TEntity GetByID(object id)
+		public virtual async Task<TEntity> GetByIDAsync(object id)
 		{
-			return dbSet.Find(id);
-		}
-
-		public virtual void Insert(TEntity entity)
-		{
-			dbSet.Add(entity);
+			return await dbSet.FindAsync(id);
 		}
 
-		public virtual void Delete(object id)
+		public virtual async Task InsertAsync(TEntity entity)
 		{
-			TEntity entityToDelete = dbSet.Find(id);
+			await dbSet.AddAsync(entity);
+		}
+
+		public virtual async Task DeleteAsync(object id)
+		{
+			TEntity entityToDelete = await dbSet.FindAsync(id);
 			Delete(entityToDelete);
 		}
 
@@ -52,9 +52,9 @@ namespace Infrastructure.Repositories
 			context.Entry(entityToUpdate).State = EntityState.Modified;
 		}
 
-		public void Save()
+		public async Task SaveAsync()
 		{
-			context.SaveChanges();
+			await context.SaveChangesAsync();
 		}
 
 		// working with specifications

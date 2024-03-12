@@ -22,9 +22,21 @@ namespace ApplicationCore
 
 		public static void AddCustomServices(this IServiceCollection services)
 		{
-			services.AddScoped<ISensorService, SensorService>();
 			services.AddScoped<IAccountsService, AccountsService>();
+			services.AddScoped<IIndicatorService, IndicatorService>();
 			services.AddScoped<IJwtService, JwtService>();
+			services.AddScoped<INotificationService, NotificationService>();
+			services.AddScoped<INotificationTypeService, NotificationTypeService>();
+			services.AddScoped<IRoomService, RoomService>();
+			services.AddScoped<ISensorDataIndicatorService, SensorDataIndicatorService>();
+			services.AddScoped<ISensorDataStampService, SensorDataStampService>();
+			services.AddScoped<ISensorService, SensorService>();
+			services.AddScoped<ISensorSettingService, SensorSettingService>();
+			services.AddScoped<ISensorTypeService, SensorTypeService>();
+			services.AddScoped<ISettingService, SettingService>();
+			services.AddScoped<IStateService, StateService>();
+			services.AddScoped<ISubscriptionService, SubscriptionService>();
+			services.AddScoped<ITelegramChatService, TelegramChatService>();
 		}
 	}
 }
