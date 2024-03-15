@@ -4,10 +4,12 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Web.Helpers;
 
 namespace Web.Controllers
 {
 	[Route("api/[controller]")]
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[ApiController]
 	public class NotificationController : ControllerBase
 	{
@@ -29,7 +31,7 @@ namespace Web.Controllers
 			this._notificationService = notificationService;
 			this._mapper = mapper;
 		}
-		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = Roles.Microcontroller)]
 		[HttpPost("InsertNotificationAsync")]
 		public async Task<IActionResult> InsertNotification([FromBody] NewNotificationModel newNotificationModel)
 		{

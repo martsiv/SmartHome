@@ -34,7 +34,7 @@ app.UseCors(builder => builder.AllowAnyOrigin());
 using (var scope = app.Services.CreateScope())
 {
 	scope.ServiceProvider.SeedRoles().Wait();
-	//scope.ServiceProvider.SeedAdmin().Wait();
+	scope.ServiceProvider.SeedAdmin().Wait();
 }
 
 // Configure the HTTP request pipeline.

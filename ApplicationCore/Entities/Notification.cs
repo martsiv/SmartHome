@@ -10,5 +10,6 @@
         public int NotificationTypeId { get; set; }
         public NotificationType? NotificationType { get; set; }
         public ICollection<Subscription> Subscriptions { get; set; } = new HashSet<Subscription>();
+        public ICollection<UserNotification> UserNotifications { get; set; } = new HashSet<UserNotification>();
     }
 }

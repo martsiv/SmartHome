@@ -1,23 +1,23 @@
 ﻿using ApplicationCore.DTOs;
 using ApplicationCore.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
 {
 	[Route("api/[controller]")]
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[ApiController]
 	public class RoomController : ControllerBase
 	{
-		private readonly IConfiguration _configuration;
 		private readonly IRoomService _roomService;
 		private readonly IMapper _mapper;
 
-		public RoomController(IConfiguration configuration,
-								IRoomService roomService,
-								IMapper mapper)
+		public RoomController(IRoomService roomService,
+							  IMapper mapper)
 		{
-			this._configuration = configuration;
 			this._roomService = roomService;
 			this._mapper = mapper;
 		}

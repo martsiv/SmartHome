@@ -1,7 +1,9 @@
 ﻿using ApplicationCore.DTOs;
 using ApplicationCore.Entities;
 using ApplicationCore.Interfaces;
+using ApplicationCore.Specifications;
 using AutoMapper;
+using System;
 
 namespace ApplicationCore.Services
 {
@@ -26,6 +28,18 @@ namespace ApplicationCore.Services
 		public async Task<IEnumerable<SensorDataStampDto>> GetAllSensorDataStampsAsync()
 		{
 			var sensorDataStamps = await sensorDataStampsRepo.GetAllAsync();
+			return mapper.Map<IEnumerable<SensorDataStampDto>>(sensorDataStamps);
+		}
+
+		public async Task<IEnumerable<SensorDataStampDto>> GetAllSensorDataStampsByDateAsync(DateTime dateTime)
+		{
+			var sensorDataStamps = await sensorDataStampsRepo.GetListBySpecAsync(new SensorDataStampSpecs.ByDate(dateTime));
+			return mapper.Map<IEnumerable<SensorDataStampDto>>(sensorDataStamps);
+		}
+
+		public async Task<IEnumerable<SensorDataStampDto>> GetAllSensorDataStampsBySensorAsync(int sensorIp)
+		{
+			var sensorDataStamps = await sensorDataStampsRepo.GetListBySpecAsync(new SensorDataStampSpecs.BySensor(sensorIp));
 			return mapper.Map<IEnumerable<SensorDataStampDto>>(sensorDataStamps);
 		}
 

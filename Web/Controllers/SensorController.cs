@@ -10,6 +10,7 @@ using Web.Helpers;
 namespace Web.Controllers
 {
 	[Route("api/[controller]")]
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[ApiController]
 	public class SensorController : ControllerBase
 	{
@@ -35,13 +36,12 @@ namespace Web.Controllers
 			this._stateService = stateService;
 		}
 		
-		[HttpPost("RegisterSensorAsync")]
+		[HttpPost("RegisterSensor")]
 		public async Task<IActionResult> ConnectSensorAsync([FromBody]RegisterSensorModel sensor)
 		{
 			string registerKey = _configuration["RegisterKey"];
 			if (registerKey != sensor.RegisterKey)
 				return Unauthorized();
-			// Розбити логіку на виявлення сенсора, якщо немає то сервіс - регістер, а далі просто сервіс - логін
 			if (await _sensorService.GetSensorByMacAsync(sensor.MacAddress) == null)
 			{
 				SensorDto sensorDto = await _sensorService.RegisterSensorAsync(sensor);
@@ -51,94 +51,91 @@ namespace Web.Controllers
 				return Ok(_sensorService.LoginSensor(_mapper.Map<SensorDto>(sensor)));
 		}
 
-		[HttpPost("AddSensorTypeAsync")]
+		[HttpPost("AddSensorType")]
 		public async Task<IActionResult> AddSensorTypeAsync(SensorTypeDto sensorType)
 		{
 			return await ExecuteServiceActionAsync(() => 
 				_sensorTypeService.AddSensorTypeAsync(sensorType));
 		}
 
-		[HttpPost("AddSensorSettingAsync")]
+		[HttpPost("AddSensorSetting")]
 		public async Task<IActionResult> AddSensorSettingAsync(SensorSettingDto sensorSetting)
 		{
 			return await ExecuteServiceActionAsync(() => 
 				_sensorSettingService.AddSensorSettingAsync(sensorSetting));
 		}
 
-		[HttpPost("AddStateAsync")]
+		[HttpPost("AddState")]
 		public async Task<IActionResult> AddStateAsync(StateDto state)
 		{
 			return await ExecuteServiceActionAsync(() => 
 				_stateService.AddStateAsync(state));
 		}
 
-		[HttpGet("GetAllSensorsAsync")]
+		[HttpGet("GetAllSensors")]
 		public async Task<IActionResult> GetAllSensorsAsync()
 		{
 			return Ok(await _sensorService.GetAllSensorsAsync());
 		}
 
-		[HttpGet("GetAllSensorSettingsAsync")]
+		[HttpGet("GetAllSensorSettings")]
 		public async Task<IActionResult> GetAllSensorSettings()
 		{
 			return Ok(await _sensorSettingService.GetAllSensorSettingsAsync());
 		}
 
-		[HttpGet("GetAllSensorTypesAsync")]
+		[HttpGet("GetAllSensorTypes")]
 		public async Task<IActionResult> GetAllSensorTypesAsync()
 		{
 			return Ok(await _sensorTypeService.GetAllSensorTypesAsync());
 		}
-
-		//[Authorize]
-		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = Roles.Microcontroller)]
-		[HttpGet("GetAllStatesAsync")]
+		[HttpGet("GetAllStates")]
 		public async Task<IActionResult> GetAllStatesAsync()
 		{
 			return Ok(await _stateService.GetAllStatesAsync());
 		}
 
-		[HttpGet("GetSensorByIdAsync/{sensorId}")]
+		[HttpGet("GetSensorById/{sensorId}")]
 		public async Task<IActionResult> GetSensorByIdAsync(int sensorId) => Ok(await _sensorService.GetSensorByIdAsync(sensorId));
 
-		[HttpGet("GetSensorSettingByIdAsync/{sensorSettingId}")]
+		[HttpGet("GetSensorSettingById/{sensorSettingId}")]
 		public async Task<IActionResult> GetSensorSettingByIdAsync(int sensorSettingId) => Ok(await _sensorSettingService.GetSensorSettingByIdAsync(sensorSettingId));
 
-		[HttpGet("GetSensorSettingsBySensorIdAsync/{sensorId}")]
+		[HttpGet("GetSensorSettingsBySensorId/{sensorId}")]
 		public async Task<IActionResult> GetSensorSettingsBySensorIdAsync(int sensorId) => Ok(await _sensorSettingService.GetSensorSettingsBySensorIdAsync(sensorId));
 
-		[HttpGet("GetSensorTypeByIdAsync/{sensorTypeId}")]
+		[HttpGet("GetSensorTypeById/{sensorTypeId}")]
 		public async Task<IActionResult> GetSensorTypeByIdAsync(int sensorTypeId) => Ok(await _sensorTypeService.GetSensorTypeByIdAsync(sensorTypeId));
 
-		[HttpGet("GetStateByIdAsync/{stateId}")]
+		[HttpGet("GetStateById/{stateId}")]
 		public async Task<IActionResult> GetStateByIdAsync(int stateId) => Ok(await _stateService.GetStateByIdAsync(stateId));
 
-		[HttpDelete("RemoveSensorAsync/{sensorId}")]
+		[HttpDelete("RemoveSensor/{sensorId}")]
 		public async Task<IActionResult> RemoveSensorAsync(int sensorId) => await ExecuteServiceActionAsync(() => _sensorService.RemoveSensorAsync(sensorId));
 
-		[HttpDelete("RemoveSensorSettingAsync/{sensorSettingId}")]
+		[HttpDelete("RemoveSensorSetting/{sensorSettingId}")]
 		public async Task<IActionResult> RemoveSensorSettingAsync(int sensorSettingId) => await ExecuteServiceActionAsync(() => _sensorSettingService.RemoveSensorSettingAsync(sensorSettingId));
 
-		[HttpDelete("RemoveSensorSettingsBySensorAsync/{sensorId}")]
+		[HttpDelete("RemoveSensorSettingsBySensor/{sensorId}")]
 		public async Task<IActionResult> RemoveSensorSettingsBySensorAsync(int sensorId) {
 			return await ExecuteServiceActionAsync(async () => await _sensorSettingService.RemoveSensorSettingsBySensorAsync(sensorId));
 		}
-		[HttpDelete("RemoveSensorTypeAsync/{sensorTypeId}")]
+		[HttpDelete("RemoveSensorType/{sensorTypeId}")]
 		public async Task<IActionResult> RemoveSensorTypeAsync(int sensorTypeId) => await ExecuteServiceActionAsync(() => _sensorTypeService.RemoveSensorTypeAsync(sensorTypeId));
 
-		[HttpDelete("RemoveStateAsync/{stateId}")]
+		[HttpDelete("RemoveState/{stateId}")]
 		public async Task<IActionResult> RemoveStateAsync(int stateId) => await ExecuteServiceActionAsync(() => _stateService.RemoveStateAsync(stateId));
 	
-		[HttpPut("UpdateSensorTypeAsync/{sensorTypeId}")]
+		[HttpPut("UpdateSensorType/{sensorTypeId}")]
 		public async Task<IActionResult> UpdateSensorTypeAsync(int sensorTypeId, SensorTypeDto sensorType) => await ExecuteServiceActionAsync(() => _sensorTypeService.UpdateSensorTypeAsync(sensorTypeId, sensorType));
 	
-		[HttpPut("UpdateStateAsync/{stateId}")]
+		[HttpPut("UpdateState/{stateId}")]
 		public async Task<IActionResult> UpdateStateAsync(int stateId, StateDto state) => await ExecuteServiceActionAsync(() => _stateService.UpdateStateAsync(stateId, state));
 
-		[HttpPut("UpdateSensorAsync/{sensorId}")]
+		[HttpPut("UpdateSensor/{sensorId}")]
 		public async Task<IActionResult> UpdateSensorAsync(int sensorId, SensorDto sensor) => await ExecuteServiceActionAsync(() => _sensorService.UpdateSensorAsync(sensorId, sensor));
 
-		[HttpPut("UpdateSensorSettingAsync/{sensorSettingId}")]
+		[HttpPut("UpdateSensorSetting/{sensorSettingId}")]
 		public async Task<IActionResult> UpdateSensorSettingAsync(int sensorSettingId, SensorSettingDto sensorSetting) => await ExecuteServiceActionAsync(() => _sensorSettingService.UpdateSensorSettingAsync(sensorSettingId, sensorSetting));
 		private async Task<IActionResult> ExecuteServiceActionAsync(Action action)
 		{

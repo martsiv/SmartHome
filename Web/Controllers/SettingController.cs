@@ -1,23 +1,23 @@
 ﻿using ApplicationCore.DTOs;
 using ApplicationCore.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
 {
 	[Route("api/[controller]")]
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[ApiController]
 	public class SettingController : ControllerBase
 	{
-		private readonly IConfiguration _configuration;
 		private readonly ISettingService _settingService;
 		private readonly IMapper _mapper;
 
-		public SettingController(IConfiguration configuration,
-								ISettingService settingService,
-								IMapper mapper)
+		public SettingController(ISettingService settingService,
+								 IMapper mapper)
 		{
-			this._configuration = configuration;
 			this._settingService = settingService;
 			this._mapper = mapper;
 		}

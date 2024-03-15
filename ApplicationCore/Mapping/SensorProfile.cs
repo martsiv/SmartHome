@@ -26,6 +26,8 @@ namespace ApplicationCore.Mapping
 			CreateMap<SensorDataIndicator, SensorDataIndicatorDto>().ReverseMap();
 			CreateMap<SensorDataStamp, SensorDataStampDto>().ReverseMap();
 			CreateMap<Subscription, SubscriptionDto>().ReverseMap();
+			CreateMap<UserNotification, UserNotificationDto>().ReverseMap();
+			CreateMap<SensorDataIndicator, GetSensorDataIndicatorModel>();
 		}
     }
 }

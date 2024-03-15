@@ -1,7 +1,9 @@
 ﻿using ApplicationCore.DTOs;
 using ApplicationCore.Entities;
 using ApplicationCore.Interfaces;
+using ApplicationCore.Specifications;
 using AutoMapper;
+using static ApplicationCore.Specifications.SensorSettingsSpecs;
 
 namespace ApplicationCore.Services
 {
@@ -33,6 +35,18 @@ namespace ApplicationCore.Services
 		{
 			var entity = await subscriptionsRepo.GetByIDAsync(subscriptionId);
 			return mapper.Map<SubscriptionDto>(entity);
+		}
+
+		public async Task<IEnumerable<SubscriptionDto>> GetSubscriptionsBySensorAsync(int sensorId)
+		{
+			var subscriptionEntities = await subscriptionsRepo.GetListBySpecAsync(new SubscriptionSpecs.BySensor(sensorId));
+			return mapper.Map<IEnumerable<SubscriptionDto>>(subscriptionEntities);
+		}
+
+		public async Task<IEnumerable<SubscriptionDto>> GetSubscriptionsByTelegramChatIdAsync(int telegramChatId)
+		{
+			var subscriptionEntities = await subscriptionsRepo.GetListBySpecAsync(new SubscriptionSpecs.ByChat(telegramChatId));
+			return mapper.Map<IEnumerable<SubscriptionDto>>(subscriptionEntities);
 		}
 
 		public async Task RemoveSubscriptionAsync(int subscriptionId)

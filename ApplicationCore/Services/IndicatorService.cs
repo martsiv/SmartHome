@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.DTOs;
 using ApplicationCore.Entities;
 using ApplicationCore.Interfaces;
+using ApplicationCore.Specifications;
 using AutoMapper;
 
 namespace ApplicationCore.Services
@@ -32,6 +33,12 @@ namespace ApplicationCore.Services
 		public async Task<IndicatorDto> GetIndicatorAsync(int indicatorId)
 		{
 			var entity = await indicatorsRepo.GetByIDAsync(indicatorId);
+			return mapper.Map<IndicatorDto>(entity);
+		}
+
+		public async Task<IndicatorDto> GetIndicatorByNameAsync(string name)
+		{
+			var entity = await indicatorsRepo.GetItemBySpecAsync(new IndicatorSpecs.ByName(name));
 			return mapper.Map<IndicatorDto>(entity);
 		}
 

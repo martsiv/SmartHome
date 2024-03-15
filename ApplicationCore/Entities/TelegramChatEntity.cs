@@ -8,5 +8,6 @@
 		public string LastName { get; set; }
 		public string Username { get; set; }
 		public virtual ICollection<Subscription> Subscriptions { get; set; } = new HashSet<Subscription>();
+		public virtual ICollection<UserNotification> UserNotifications { get; set; } = new HashSet<UserNotification>();
 	}
 }

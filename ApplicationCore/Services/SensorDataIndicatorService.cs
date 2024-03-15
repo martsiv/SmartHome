@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.DTOs;
 using ApplicationCore.Entities;
 using ApplicationCore.Interfaces;
+using ApplicationCore.Specifications;
 using AutoMapper;
 
 namespace ApplicationCore.Services
@@ -27,6 +28,12 @@ namespace ApplicationCore.Services
 		{
 			var telegramChatEntities = await sensorDataIndicatorsRepo.GetAllAsync();
 			return mapper.Map<IEnumerable<SensorDataIndicatorDto>>(telegramChatEntities);
+		}
+
+		public async Task<IEnumerable<GetSensorDataIndicatorModel>> GetAllSensorDataIndicatorsByDataStampIdAsync(int dataStampId)
+		{
+			var entities = await sensorDataIndicatorsRepo.GetListBySpecAsync(new SensorDataIndicatorSpecs.ByDataStampId(dataStampId));
+			return mapper.Map<IEnumerable<GetSensorDataIndicatorModel>>(entities);
 		}
 
 		public async Task<SensorDataIndicatorDto> GetSensorDataIndicatorByIdAsync(int sensorDataIndicatorId)
