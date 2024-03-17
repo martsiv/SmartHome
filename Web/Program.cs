@@ -5,6 +5,8 @@ using Web.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddJsonFile("secrets.json", optional: true);
+
 string connStr = builder.Configuration.GetConnectionString("DefaultConnection")!;
 
 // Add services to the container.
