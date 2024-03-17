@@ -9,7 +9,7 @@ namespace ApplicationCore.Specifications
 		{
 			public ByDate(DateTime dateTime)
 			{
-				Query.Where(x => x.Date.Date == dateTime.Date);
+				Query.Where(x => x.Date.Date == dateTime.Date).OrderByDescending(x => x.Date);
 			}
 		}
 		public class BySensor : Specification<SensorDataStamp>

@@ -39,7 +39,7 @@ namespace ApplicationCore.Services
 				new Claim(ClaimTypes.Name, sensorDto.Name),
 			};
 
-			string role = "SensorRole";
+			string role = "Microcontroller";
 			claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType, role));
 
 			return claims;

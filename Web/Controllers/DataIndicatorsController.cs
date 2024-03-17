@@ -9,7 +9,6 @@ using Web.Helpers;
 namespace Web.Controllers
 {
 	[Route("api/[controller]")]
-	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[ApiController]
 	public class DataIndicatorsController : ControllerBase
 	{
@@ -31,50 +30,76 @@ namespace Web.Controllers
 			this._dataStampService = dataStampService;
 			this._mapper = mapper;
 		}
+		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 		[HttpPost("AddIndicator")]
-		public async Task<IActionResult> AddIndicatorAsync([FromBody] IndicatorDto indicatorDto)
+		public IActionResult AddIndicator([FromBody] IndicatorDto indicatorDto)
 		{
-			return await ExecuteServiceActionAsync(() =>
-							_indicatorService.AddIndicatorAsync(indicatorDto));
+			return ExecuteServiceAction(() =>
+							_indicatorService.AddIndicator(indicatorDto));
 		}
 		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = Roles.Microcontroller)]
 		[HttpPost("AddDataStamp")]
-		public async Task<IActionResult> AddDataStampAsync([FromBody] CreateDataStampModel dataStamp)
+		public IActionResult AddDataStamp([FromBody] CreateDataStampModel dataStamp)
 		{
-			return await ExecuteServiceActionAsync(() =>
-							_dataStampService.AddDataStampAsync(dataStamp));
+			return ExecuteServiceAction(() =>
+							_dataStampService.AddDataStamp(dataStamp));
 		}
+		[HttpPost("AddSensorDataStamp")]
+		public IActionResult AddSensorDataStamp([FromBody] SensorDataStampDto dataStamp)
+		{
+			return ExecuteServiceAction(() =>
+							_sensorDataStampService.AddSensorDataStamp(dataStamp));
+		}
+		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 		[HttpGet("GetAllIndicators")]
-		public async Task<IActionResult> GetAllIndicatorsAsync()
+		public IActionResult GetAllIndicators()
 		{
-			return Ok(await _indicatorService.GetAllIndicatorsAsync());
+			return Ok(_indicatorService.GetAllIndicators());
 		}
+		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 		[HttpGet("GetAllDataStamps")]
-		public async Task<IActionResult> GetAllDataStampsAsync()
+		public IActionResult GetAllDataStamps()
 		{
-			return Ok(await _dataStampService.GetAllDataStampsAsync());
+			return Ok(_dataStampService.GetAllDataStamps());
 		}
+		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 		[HttpGet("GetAllDataStampsBySensor")]
-		public async Task<IActionResult> GetAllDataStampsBySensorAsync(int sensorId)
+		public IActionResult GetAllDataStampsBySensor(int sensorId)
 		{
-			return Ok(await _dataStampService.GetAllDataStampsBySensorAsync(sensorId));
+			return Ok(_dataStampService.GetAllDataStampsBySensor(sensorId));
 		}
+		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+		[HttpGet("GettDataStampsById")]
+		public IActionResult GettDataStampsById(int id)
+		{
+			return Ok(_dataStampService.GetDataStampById(id));
+		}
+
+		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+		[HttpGet("GetLastDataStampsByDate")]
+		public IActionResult GetLastDataStampsByDate(DateTime dateTime)
+		{
+			return Ok(_dataStampService.GetLastDataStampByDate(dateTime));
+		}
+		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 		[HttpGet("GetAllDataStampsByDate")]
-		public async Task<IActionResult> GetAllDataStampsByDateAsync(DateTime dateTime)
+		public IActionResult GetAllDataStampsByDate(DateTime dateTime)
 		{
-			return Ok(await _dataStampService.GetAllDataStampsByDateAsync(dateTime));
+			return Ok(_dataStampService.GetAllDataStampsByDate(dateTime));
 		}
+		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 		[HttpPost("RemoveIndicator")]
-		public async Task<IActionResult> RemoveIndicatorAsync(int indicator)
+		public IActionResult RemoveIndicator(int indicator)
 		{
-			return await ExecuteServiceActionAsync(async () => await _indicatorService.RemoveIndicatorAsync(indicator));
+			return ExecuteServiceAction(() => _indicatorService.RemoveIndicator(indicator));
 		}
+		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 		[HttpPost("RemoveDataStamp")]
-		public async Task<IActionResult> RemoveDataStampAsync(int sensorDataStamp)
+		public IActionResult RemoveDataStampAsync(int sensorDataStamp)
 		{
-			return await ExecuteServiceActionAsync(async () => await _sensorDataStampService.RemoveSensorDataStampAsync(sensorDataStamp));
+			return ExecuteServiceAction(() => _sensorDataStampService.RemoveSensorDataStamp(sensorDataStamp));
 		}
-		private async Task<IActionResult> ExecuteServiceActionAsync(Action action)
+		private IActionResult ExecuteServiceAction(Action action)
 		{
 			try
 			{

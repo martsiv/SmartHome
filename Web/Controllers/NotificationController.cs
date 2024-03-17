@@ -32,11 +32,11 @@ namespace Web.Controllers
 			this._mapper = mapper;
 		}
 		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = Roles.Microcontroller)]
-		[HttpPost("InsertNotificationAsync")]
+		[HttpPost("InsertNotification")]
 		public async Task<IActionResult> InsertNotification([FromBody] NewNotificationModel newNotificationModel)
 		{
-			var sensorId = (await _sensorService.GetSensorByMacAsync(newNotificationModel.SensorMacAddress))?.Id;
-			var notificationType = (await _notificationTypeService.GetNotificationTypeByLevelAsync(newNotificationModel.PriorityLevel));
+			int? sensorId = _sensorService.GetSensorByMac(newNotificationModel.SensorMacAddress)?.Id;
+			var notificationType = _notificationTypeService.GetNotificationTypeByLevel(newNotificationModel.PriorityLevel);
 			if (sensorId != null && notificationType != null)
 			{
 				NotificationDto notificationDto = new NotificationDto()
@@ -46,16 +46,16 @@ namespace Web.Controllers
 					NotificationTypeId = notificationType.Id,
 					Date = DateTime.UtcNow
 				};
-				return await ExecuteServiceActionAsync(() => _notificationService.InsertNotificationAsync(notificationDto));
+				return ExecuteServiceAction(() => _notificationService.InsertNotification(notificationDto));
 			}
 
 			return BadRequest();
 		}
 
-		[HttpGet("GetLastNotificationsAsync/{sensorId}")]
+		[HttpGet("GetLastNotifications/{sensorId}")]
 		public async Task<IActionResult> GetLastNotifications(int sensorId) => Ok(await _notificationService.GetLastNotificationsAsync(sensorId));
 
-		private async Task<IActionResult> ExecuteServiceActionAsync(Action action)
+		private IActionResult ExecuteServiceAction(Action action)
 		{
 			try
 			{

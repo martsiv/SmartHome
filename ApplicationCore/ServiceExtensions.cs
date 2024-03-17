@@ -37,6 +37,7 @@ namespace ApplicationCore
 			services.AddScoped<IStateService, StateService>();
 			services.AddScoped<ISubscriptionService, SubscriptionService>();
 			services.AddScoped<ITelegramChatService, TelegramChatService>();
+			services.AddScoped<IDataStampService, DataStampService>();
 		}
 	}
 }

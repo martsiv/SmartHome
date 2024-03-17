@@ -15,11 +15,25 @@ namespace ApplicationCore.Services
             this.mapper = mapper;
 			this.sensorTypesRepo = sensorTypesRepo;
         }
+
+		public void AddSensorType(SensorTypeDto sensorType)
+		{
+			var entity = mapper.Map<SensorType>(sensorType);
+			sensorTypesRepo.Insert(entity);
+			sensorTypesRepo.Save();
+		}
+
 		public async Task AddSensorTypeAsync(SensorTypeDto sensorType)
 		{
 			var entity = mapper.Map<SensorType>(sensorType);
 			await sensorTypesRepo.InsertAsync(entity);
 			await sensorTypesRepo.SaveAsync();
+		}
+
+		public IEnumerable<SensorTypeDto?> GetAllSensorTypes()
+		{
+			var sensorTypes = sensorTypesRepo.GetAll();
+			return mapper.Map<IEnumerable<SensorTypeDto>>(sensorTypes);
 		}
 
 		public async Task<IEnumerable<SensorTypeDto>> GetAllSensorTypesAsync()
@@ -28,10 +42,28 @@ namespace ApplicationCore.Services
 			return mapper.Map<IEnumerable<SensorTypeDto>>(sensorTypes);
 		}
 
-		public async Task<SensorTypeDto> GetSensorTypeByIdAsync(int sensorTypeId)
+		public SensorTypeDto? GetSensorTypeById(int sensorTypeId)
+		{
+			var entity = sensorTypesRepo.GetByID(sensorTypeId);
+			if (entity == null) return null;
+			return mapper.Map<SensorTypeDto>(entity);
+		}
+
+		public async Task<SensorTypeDto?> GetSensorTypeByIdAsync(int sensorTypeId)
 		{
 			var entity = await sensorTypesRepo.GetByIDAsync(sensorTypeId);
+			if (entity == null) return null;
 			return mapper.Map<SensorTypeDto>(entity);
+		}
+
+		public void RemoveSensorType(int sensorTypeId)
+		{
+			var entity = sensorTypesRepo.GetByID(sensorTypeId);
+			if (entity != null)
+			{
+				sensorTypesRepo.Delete(sensorTypeId);
+				sensorTypesRepo.Save();
+			}
 		}
 
 		public async Task RemoveSensorTypeAsync(int sensorTypeId)
@@ -41,6 +73,17 @@ namespace ApplicationCore.Services
 			{
 				await sensorTypesRepo.DeleteAsync(sensorTypeId);
 				await sensorTypesRepo.SaveAsync();
+			}
+		}
+
+		public void UpdateSensorType(int sensorTypeId, SensorTypeDto sensorType)
+		{
+			var existingEntity = sensorTypesRepo.GetByID(sensorTypeId);
+			if (existingEntity != null)
+			{
+				mapper.Map(sensorType, existingEntity);
+				sensorTypesRepo.Update(existingEntity);
+				sensorTypesRepo.Save();
 			}
 		}
 

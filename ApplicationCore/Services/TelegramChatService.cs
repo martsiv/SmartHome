@@ -16,11 +16,24 @@ namespace ApplicationCore.Services
 			this.telegramChatEntitiesRepo = telegramChatEntitiesRepo;
         }
 
+		public void AddTelegramChat(TelegramChatDto telegramChatDto)
+		{
+			var entity = mapper.Map<TelegramChatEntity>(telegramChatDto);
+			telegramChatEntitiesRepo.Insert(entity);
+			telegramChatEntitiesRepo.Save();
+		}
+
 		public async Task AddTelegramChatAsync(TelegramChatDto telegramChatDto)
 		{
 			var entity = mapper.Map<TelegramChatEntity>(telegramChatDto);
 			await telegramChatEntitiesRepo.InsertAsync(entity);
 			await telegramChatEntitiesRepo.SaveAsync();
+		}
+
+		public IEnumerable<TelegramChatDto> GetAllTelegramChats()
+		{
+			var telegramChatEntities = telegramChatEntitiesRepo.GetAll();
+			return mapper.Map<IEnumerable<TelegramChatDto>>(telegramChatEntities);
 		}
 
 		public async Task<IEnumerable<TelegramChatDto>> GetAllTelegramChatsAsync()
@@ -29,10 +42,28 @@ namespace ApplicationCore.Services
 			return mapper.Map<IEnumerable<TelegramChatDto>>(telegramChatEntities);
 		}
 
-		public async Task<TelegramChatDto> GetTelegramChatAsync(int telegramChatId)
+		public TelegramChatDto? GetTelegramChat(int telegramChatId)
+		{
+			var entity = telegramChatEntitiesRepo.GetByID(telegramChatId);
+			if (entity == null) return null;
+			return mapper.Map<TelegramChatDto>(entity);
+		}
+
+		public async Task<TelegramChatDto?> GetTelegramChatAsync(int telegramChatId)
 		{
 			var entity = await telegramChatEntitiesRepo.GetByIDAsync(telegramChatId);
+			if (entity == null) return null;
 			return mapper.Map<TelegramChatDto>(entity);
+		}
+
+		public void RemoveTelegramChat(int telegramChatId)
+		{
+			var entity = telegramChatEntitiesRepo.GetByID(telegramChatId);
+			if (entity != null)
+			{
+				telegramChatEntitiesRepo.Delete(telegramChatId);
+				telegramChatEntitiesRepo.Save();
+			}
 		}
 
 		public async Task RemoveTelegramChatAsync(int telegramChatId)
@@ -42,6 +73,17 @@ namespace ApplicationCore.Services
 			{
 				await telegramChatEntitiesRepo.DeleteAsync(telegramChatId);
 				await telegramChatEntitiesRepo.SaveAsync();
+			}
+		}
+
+		public void UpdateTelegramChat(int telegramChatId, TelegramChatDto telegramChatDto)
+		{
+			var existingEntity = telegramChatEntitiesRepo.GetByID(telegramChatId);
+			if (existingEntity != null)
+			{
+				mapper.Map(telegramChatDto, existingEntity);
+				telegramChatEntitiesRepo.Update(existingEntity);
+				telegramChatEntitiesRepo.Save();
 			}
 		}
 
